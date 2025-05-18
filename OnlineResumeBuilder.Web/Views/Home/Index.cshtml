@@ -1,0 +1,108 @@
+﻿@model OnlineResumeBuilder.Web.Models.UserInfo
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="row mb-4">
+    <div class="col-md-12 text-center">
+        <div class="py-5">
+            <h1 class="display-4 mb-4">Welcome to Online Resume Builder</h1>
+            <p class="lead">Create a professional resume in minutes. Fill in your details, skills, and experiences to generate a perfect resume.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-person-lines-fill text-primary" style="font-size: 3rem;"></i>
+                <h4 class="card-title mt-3">Create Your Profile</h4>
+                <p class="card-text">Start by adding your personal information, contact details, and social links.</p>
+                <a asp-controller="UserInfos" asp-action="Index" class="btn btn-primary mt-2">Start Here</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-journal-text text-primary" style="font-size: 3rem;"></i>
+                <h4 class="card-title mt-3">Add Resume Sections</h4>
+                <p class="card-text">Include your skills, experiences, education, projects, and references.</p>
+                @if (Model != null && Model.Id > 0)
+                {
+                    <div class="dropdown mt-2">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            Add Sections
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" asp-controller="Objectives" asp-action="Create">Add Objective</a></li>
+                            <li><a class="dropdown-item" asp-controller="Skills" asp-action="Create">Add Skills</a></li>
+                            <li><a class="dropdown-item" asp-controller="Experiences" asp-action="Create">Add Experience</a></li>
+                            <li><a class="dropdown-item" asp-controller="Projects" asp-action="Create">Add Projects</a></li>
+                            <li><a class="dropdown-item" asp-controller="Educations" asp-action="Create">Add Education</a></li>
+                            <li><a class="dropdown-item" asp-controller="Certifications" asp-action="Create">Add Certifications</a></li>
+                            <li><a class="dropdown-item" asp-controller="References" asp-action="Create">Add References</a></li>
+                        </ul>
+                    </div>
+                }
+                else
+                {
+                    <a asp-controller="UserInfos" asp-action="Create" class="btn btn-outline-primary mt-2">Create Profile First</a>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-file-earmark-pdf text-primary" style="font-size: 3rem;"></i>
+                <h4 class="card-title mt-3">Preview & Download</h4>
+                <p class="card-text">Preview your resume and download it as a professional PDF document.</p>
+                @if (Model != null && Model.Id > 0)
+                {
+                    <a asp-controller="Resume" asp-action="Preview" asp-route-id="@Model.Id" class="btn btn-primary mt-2">Preview Resume</a>
+                }
+                else
+                {
+                    <a asp-controller="UserInfos" asp-action="Create" class="btn btn-outline-primary mt-2">Create Profile First</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model != null && Model.Id > 0)
+{
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="user-info-container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h3 class="user-name">@Model.FullName</h3>
+                        <p class="mb-1">@Model.Email | @Model.PhoneNumber</p>
+                        <div class="social-links">
+                            @if (!string.IsNullOrEmpty(Model.GitHubLink))
+                            {
+                                <a href="@Model.GitHubLink" target="_blank" class="me-2"><i class="bi bi-github"></i> GitHub</a>
+                            }
+                            @if (!string.IsNullOrEmpty(Model.LinkedInLink))
+                            {
+                                <a href="@Model.LinkedInLink" target="_blank"><i class="bi bi-linkedin"></i> LinkedIn</a>
+                            }
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        <a asp-controller="UserInfos" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil"></i> Edit Profile
+                        </a>
+                        <a asp-controller="Resume" asp-action="Preview" asp-route-id="@Model.Id" class="btn btn-sm btn-primary ms-2">
+                            <i class="bi bi-eye"></i> View Resume
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

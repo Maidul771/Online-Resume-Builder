@@ -1,0 +1,207 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background-color: #f8f9fa;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  white-space: nowrap;
+  line-height: 60px;
+}
+
+/* Resume Builder Custom Styles */
+.user-info-container {
+  background-color: #f8f9fa;
+  border-left: 5px solid #0d6efd;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.user-name {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 10px;
+}
+
+.section-container {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #0d6efd;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #f1f1f1;
+  padding-bottom: 5px;
+}
+
+.form-section {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.form-section h4 {
+  color: #0d6efd;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #f1f1f1;
+  padding-bottom: 5px;
+}
+
+.checkbox-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.checkbox-item {
+  min-width: 180px;
+}
+
+.preview-container {
+  max-width: 900px;
+  margin: 20px auto;
+  background-color: white;
+  padding: 30px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.preview-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.social-links a {
+  margin-right: 10px;
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.resume-section {
+  margin-bottom: 25px;
+}
+
+.resume-section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #0d6efd;
+  border-bottom: 2px solid #0d6efd;
+  padding-bottom: 5px;
+  margin-bottom: 15px;
+}
+
+.experience-item, .education-item, .project-item, .certification-item {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.experience-title, .education-title, .project-title, .certification-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.print-button {
+  background-color: #0d6efd;
+  color: white;
+  font-weight: 500;
+  margin-top: 20px;
+}
+
+@media print {
+  body {
+    padding: 0;
+    margin: 0;
+    background-color: white !important;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  
+  header, footer, .print-button, nav, .navbar, .footer {
+    display: none !important;
+  }
+  
+  .preview-container {
+    box-shadow: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+  }
+  
+  /* Ensure all text is visible in black */
+  body, p, h1, h2, h3, h4, h5, h6, span, div {
+    color: black !important;
+  }
+  
+  /* Fix bootstrap column widths for print */
+  .col-md-4 {
+    width: 33.33% !important;
+    float: left !important;
+  }
+  
+  .col-md-6 {
+    width: 50% !important;
+    float: left !important;
+  }
+  
+  .col-md-12 {
+    width: 100% !important;
+  }
+  
+  /* Avoid breaking content in print */
+  .resume-section, 
+  .experience-item, 
+  .education-item, 
+  .project-item, 
+  .certification-item, 
+  .reference-item {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}

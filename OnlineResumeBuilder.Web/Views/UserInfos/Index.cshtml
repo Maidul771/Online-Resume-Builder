@@ -1,0 +1,63 @@
+@model IEnumerable<OnlineResumeBuilder.Web.Models.UserInfo>
+
+@{
+    ViewData["Title"] = "User Information";
+}
+
+<div class="section-container">
+    <h2 class="section-title">User Information</h2>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">Create New</a>
+    </p>
+    
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            No user information found. Please create a new user profile to begin building your resume.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.FullName)</th>
+                        <th>@Html.DisplayNameFor(model => model.Email)</th>
+                        <th>@Html.DisplayNameFor(model => model.PhoneNumber)</th>
+                        <th>Links</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                            <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.GitHubLink))
+                                {
+                                    <a href="@item.GitHubLink" target="_blank" class="me-2"><i class="bi bi-github"></i> GitHub</a>
+                                }
+                                @if (!string.IsNullOrEmpty(item.LinkedInLink))
+                                {
+                                    <a href="@item.LinkedInLink" target="_blank"><i class="bi bi-linkedin"></i> LinkedIn</a>
+                                }
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">Details</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div> 

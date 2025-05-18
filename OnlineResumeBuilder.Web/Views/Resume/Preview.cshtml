@@ -1,0 +1,186 @@
+@model OnlineResumeBuilder.Web.Models.UserInfo
+
+@{
+    ViewData["Title"] = "Resume Preview";
+}
+
+@if (Model == null || Model.Id == 0)
+{
+    <div class="alert alert-warning">
+        <h4>No user profile found!</h4>
+        <p>Please create a user profile first to preview your resume.</p>
+        <a asp-controller="UserInfos" asp-action="Create" class="btn btn-primary">Create User Profile</a>
+    </div>
+}
+else
+{
+    <div class="preview-container">
+        <div class="preview-header mb-4">
+            <h1 class="user-name mb-2">@Model.FullName</h1>
+            <p class="mb-1">@Model.Email | @Model.PhoneNumber</p>
+            <div class="social-links">
+                @if (!string.IsNullOrEmpty(Model.GitHubLink))
+                {
+                    <a href="@Model.GitHubLink" target="_blank"><i class="bi bi-github"></i> GitHub</a>
+                }
+                @if (!string.IsNullOrEmpty(Model.LinkedInLink))
+                {
+                    <a href="@Model.LinkedInLink" target="_blank"><i class="bi bi-linkedin"></i> LinkedIn</a>
+                }
+            </div>
+        </div>
+
+        @if (Model.Objectives != null && Model.Objectives.Any())
+        {
+            <div class="resume-section">
+                <h2 class="resume-section-title">Objective</h2>
+                @foreach (var objective in Model.Objectives)
+                {
+                    <p>@objective.Details</p>
+                }
+            </div>
+        }
+
+        @if (Model.Skills != null && Model.Skills.Any())
+        {
+            <div class="resume-section">
+                <h2 class="resume-section-title">Skills</h2>
+                <div class="row">
+                    @foreach (var skill in Model.Skills)
+                    {
+                        <div class="col-md-4 mb-2">
+                            <span><i class="bi bi-check-circle-fill text-primary me-1"></i> @skill.SkillName</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (Model.Experiences != null && Model.Experiences.Any())
+        {
+            <div class="resume-section">
+                <h2 class="resume-section-title">Experience</h2>
+                @foreach (var experience in Model.Experiences.OrderByDescending(e => e.StartDate))
+                {
+                    <div class="experience-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="experience-title mb-0">@experience.Position</h4>
+                            <span class="text-muted">
+                                @experience.StartDate.ToString("MMM yyyy") - 
+                                @(experience.EndDate.HasValue ? experience.EndDate.Value.ToString("MMM yyyy") : "Present")
+                            </span>
+                        </div>
+                        <h5>@experience.CompanyName</h5>
+                        <p>@experience.Details</p>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.Projects != null && Model.Projects.Any())
+        {
+            <div class="resume-section">
+                <h2 class="resume-section-title">Projects</h2>
+                @foreach (var project in Model.Projects)
+                {
+                    <div class="project-item">
+                        <h4 class="project-title">@project.ProjectName</h4>
+                        <p>@project.Description</p>
+                        <div class="technologies">
+                            <strong>Technologies:</strong>
+                            @{ 
+                                var techFlags = Enum.GetValues(typeof(OnlineResumeBuilder.Web.Models.TechnologyType))
+                                    .Cast<OnlineResumeBuilder.Web.Models.TechnologyType>()
+                                    .Where(t => project.TechnologyUsed.HasFlag(t))
+                                    .Select(t => t.ToString());
+                            }
+                            @string.Join(", ", techFlags)
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.Educations != null && Model.Educations.Any())
+        {
+            <div class="resume-section">
+                <h2 class="resume-section-title">Education</h2>
+                @foreach (var education in Model.Educations.OrderByDescending(e => e.GraduationYear))
+                {
+                    <div class="education-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="education-title mb-0">@education.Degree.ToString() in @education.Subject.ToString()</h4>
+                            @if (education.GraduationYear.HasValue)
+                            {
+                                <span class="text-muted">@education.GraduationYear</span>
+                            }
+                        </div>
+                        <h5>@education.Institution</h5>
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.Certifications != null && Model.Certifications.Any())
+        {
+            <div class="resume-section">
+                <h2 class="resume-section-title">Certifications</h2>
+                @foreach (var certification in Model.Certifications.OrderByDescending(c => c.CompletionYear))
+                {
+                    <div class="certification-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="certification-title mb-0">@certification.CourseName</h4>
+                            @if (certification.CompletionYear.HasValue)
+                            {
+                                <span class="text-muted">@certification.CompletionYear</span>
+                            }
+                        </div>
+                        <h5>@certification.Institute</h5>
+                        @if (!string.IsNullOrEmpty(certification.CertificateUrl))
+                        {
+                            <a href="@certification.CertificateUrl" target="_blank">View Certificate</a>
+                        }
+                    </div>
+                }
+            </div>
+        }
+
+        @if (Model.References != null && Model.References.Any())
+        {
+            <div class="resume-section">
+                <h2 class="resume-section-title">References</h2>
+                <div class="row">
+                    @foreach (var reference in Model.References)
+                    {
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">@reference.RefereeName</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">@reference.Organization</h6>
+                                    <p class="mb-1"><i class="bi bi-envelope"></i> @reference.Email</p>
+                                    @if (!string.IsNullOrEmpty(reference.Phone))
+                                    {
+                                        <p class="mb-1"><i class="bi bi-telephone"></i> @reference.Phone</p>
+                                    }
+                                    @if (!string.IsNullOrEmpty(reference.Relationship))
+                                    {
+                                        <p class="mb-0 text-muted">Relationship: @reference.Relationship</p>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        <div class="text-center mt-4">
+            <a asp-action="Download" asp-route-id="@Model.Id" class="btn btn-primary print-button">
+                <i class="bi bi-download"></i> Download PDF
+            </a>
+            <a asp-action="DownloadPage" asp-route-id="@Model.Id" class="btn btn-outline-primary ms-2">
+                <i class="bi bi-printer"></i> Print Version
+            </a>
+        </div>
+    </div>
+} 

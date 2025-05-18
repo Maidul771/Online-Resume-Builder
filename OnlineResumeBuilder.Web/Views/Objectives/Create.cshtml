@@ -1,0 +1,32 @@
+@model OnlineResumeBuilder.Web.Models.Objective
+
+@{
+    ViewData["Title"] = "Add Objective";
+}
+
+<div class="form-section">
+    <h2 class="section-title">Add Career Objective</h2>
+    
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        
+        <div class="form-floating mb-3">
+            <textarea asp-for="Details" class="form-control" placeholder="Career Objective" style="height: 150px"></textarea>
+            <label asp-for="Details">Career Objective</label>
+            <span asp-validation-for="Details" class="text-danger"></span>
+        </div>
+        
+        <div class="d-flex justify-content-between mt-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Save
+            </button>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 
