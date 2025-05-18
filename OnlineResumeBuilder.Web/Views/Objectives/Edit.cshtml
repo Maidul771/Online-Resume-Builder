@@ -1,21 +1,22 @@
 @model OnlineResumeBuilder.Web.Models.Objective
 
 @{
-    ViewData["Title"] = "Add Objective";
+    ViewData["Title"] = "Edit Objective";
 }
 
 <div class="section-container">
-    <h2 class="section-title">Add Career Objective</h2>
+    <h2 class="section-title">Edit Career Objective</h2>
     <div class="row">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <form asp-action="Create">
+                    <form asp-action="Edit">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
                         
                         <div class="mb-3">
                             <label asp-for="Details" class="form-label">Career Objective</label>
-                            <textarea asp-for="Details" class="form-control" rows="5" placeholder="Write your career objective here..."></textarea>
+                            <textarea asp-for="Details" class="form-control" rows="5"></textarea>
                             <span asp-validation-for="Details" class="text-danger"></span>
                             <div class="form-text">Describe your career goals and aspirations (50-300 words).</div>
                         </div>
@@ -23,6 +24,7 @@
                         <div class="mb-3">
                             <label asp-for="UserInfoId" class="form-label">User</label>
                             <select asp-for="UserInfoId" class="form-select" asp-items="ViewBag.UserInfoId"></select>
+                            <span asp-validation-for="UserInfoId" class="text-danger"></span>
                         </div>
                         
                         <div class="d-flex justify-content-between">

@@ -12,6 +12,13 @@
         </a>
     </div>
 
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger mb-4">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
     @if (!Model.Any())
     {
         <div class="alert alert-info">
@@ -37,6 +44,9 @@
                             {
                                 <p class="mb-0 text-muted">Relationship: @item.Relationship</p>
                             }
+                            <p class="mt-2 mb-0 text-muted">
+                                <small>For: @item.UserInfo?.FullName</small>
+                            </p>
                         </div>
                         <div class="card-footer bg-transparent d-flex justify-content-between">
                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">

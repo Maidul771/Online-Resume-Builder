@@ -48,7 +48,25 @@ namespace OnlineResumeBuilder.Web.Controllers
         // GET: Certifications/Create
         public IActionResult Create()
         {
-            ViewData["UserInfoId"] = new SelectList(_context.UserInfos, "Id", "FullName");
+            var users = _context.UserInfos.ToList();
+            
+            if (!users.Any())
+            {
+                // No users exist, redirect to create user
+                TempData["ErrorMessage"] = "You must create a user profile before adding certifications.";
+                return RedirectToAction("Create", "UserInfos");
+            }
+            
+            if (users.Count == 1)
+            {
+                // If only one user exists, preselect it
+                ViewData["UserInfoId"] = new SelectList(users, "Id", "FullName", users.First().Id);
+            }
+            else
+            {
+                ViewData["UserInfoId"] = new SelectList(users, "Id", "FullName");
+            }
+            
             return View();
         }
 
@@ -59,6 +77,14 @@ namespace OnlineResumeBuilder.Web.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Ensure UserInfoId refers to a valid user
+                if (!_context.UserInfos.Any(u => u.Id == certification.UserInfoId))
+                {
+                    ModelState.AddModelError("UserInfoId", "Please select a valid user.");
+                    ViewData["UserInfoId"] = new SelectList(_context.UserInfos, "Id", "FullName");
+                    return View(certification);
+                }
+                
                 _context.Add(certification);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -80,6 +106,14 @@ namespace OnlineResumeBuilder.Web.Controllers
             {
                 return NotFound();
             }
+            
+            var users = _context.UserInfos.ToList();
+            if (!users.Any())
+            {
+                TempData["ErrorMessage"] = "No users exist in the system.";
+                return RedirectToAction("Index", "UserInfos");
+            }
+            
             ViewData["UserInfoId"] = new SelectList(_context.UserInfos, "Id", "FullName", certification.UserInfoId);
             return View(certification);
         }
@@ -96,6 +130,14 @@ namespace OnlineResumeBuilder.Web.Controllers
 
             if (ModelState.IsValid)
             {
+                // Ensure UserInfoId refers to a valid user
+                if (!_context.UserInfos.Any(u => u.Id == certification.UserInfoId))
+                {
+                    ModelState.AddModelError("UserInfoId", "Please select a valid user.");
+                    ViewData["UserInfoId"] = new SelectList(_context.UserInfos, "Id", "FullName");
+                    return View(certification);
+                }
+                
                 try
                 {
                     _context.Update(certification);

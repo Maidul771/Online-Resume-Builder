@@ -1,0 +1,63 @@
+@model OnlineResumeBuilder.Web.Models.Project
+
+@{
+    ViewData["Title"] = "Delete Project";
+}
+
+<div class="section-container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="section-title mb-0 text-danger">Delete Project</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+
+    <div class="alert alert-danger mb-4">
+        <h5><i class="bi bi-exclamation-triangle"></i> Warning</h5>
+        <p>Are you sure you want to delete this project? This action cannot be undone.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">@Model.ProjectName</h4>
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h5>Description</h5>
+                    <p>@Model.Description</p>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <h5>Technologies Used</h5>
+                    <div class="mt-2">
+                        @{ 
+                            var techFlags = Enum.GetValues(typeof(OnlineResumeBuilder.Web.Models.TechnologyType))
+                                .Cast<OnlineResumeBuilder.Web.Models.TechnologyType>()
+                                .Where(t => Model.TechnologyUsed.HasFlag(t))
+                                .Select(t => t.ToString());
+                        
+                            foreach (var tech in techFlags)
+                            {
+                                <span class="badge bg-secondary me-1 mb-1">@tech</span>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <h5>User</h5>
+                    <p>@Html.DisplayFor(model => model.UserInfo.FullName)</p>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Confirm Delete
+                </button>
+            </form>
+        </div>
+    </div>
+</div> 

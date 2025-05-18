@@ -1,30 +1,33 @@
-@model OnlineResumeBuilder.Web.Models.Objective
+@model OnlineResumeBuilder.Web.Models.Skill
 
 @{
-    ViewData["Title"] = "Add Objective";
+    ViewData["Title"] = "Edit Skill";
 }
 
 <div class="section-container">
-    <h2 class="section-title">Add Career Objective</h2>
+    <h2 class="section-title">Edit Skill</h2>
     <div class="row">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-                    <form asp-action="Create">
+                    <form asp-action="Edit">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                        
+                        <input type="hidden" asp-for="Id" />
                         <div class="mb-3">
-                            <label asp-for="Details" class="form-label">Career Objective</label>
-                            <textarea asp-for="Details" class="form-control" rows="5" placeholder="Write your career objective here..."></textarea>
-                            <span asp-validation-for="Details" class="text-danger"></span>
-                            <div class="form-text">Describe your career goals and aspirations (50-300 words).</div>
+                            <label asp-for="SkillName" class="form-label"></label>
+                            <input asp-for="SkillName" class="form-control" />
+                            <span asp-validation-for="SkillName" class="text-danger"></span>
                         </div>
-                        
+                        <div class="mb-3">
+                            <label asp-for="SkillType" class="form-label"></label>
+                            <select asp-for="SkillType" asp-items="ViewBag.SkillTypes" class="form-select"></select>
+                            <span asp-validation-for="SkillType" class="text-danger"></span>
+                        </div>
                         <div class="mb-3">
                             <label asp-for="UserInfoId" class="form-label">User</label>
                             <select asp-for="UserInfoId" class="form-select" asp-items="ViewBag.UserInfoId"></select>
+                            <span asp-validation-for="UserInfoId" class="text-danger"></span>
                         </div>
-                        
                         <div class="d-flex justify-content-between">
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-save"></i> Save
@@ -43,14 +46,8 @@
                     <h5 class="mb-0">Tips</h5>
                 </div>
                 <div class="card-body">
-                    <p>A good career objective should briefly highlight your:</p>
-                    <ul>
-                        <li>Professional identity</li>
-                        <li>Key skills and strengths</li>
-                        <li>Career goals and aspirations</li>
-                        <li>Value you can bring to an employer</li>
-                    </ul>
-                    <p>Keep it concise, specific, and tailored to your target role.</p>
+                    <p>Update your skill information to keep your resume current and relevant.</p>
+                    <p>Choose the most appropriate skill type that best represents your expertise in this area.</p>
                 </div>
             </div>
         </div>

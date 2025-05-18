@@ -1,0 +1,70 @@
+@model OnlineResumeBuilder.Web.Models.Education
+
+@{
+    ViewData["Title"] = "Edit Education";
+}
+
+<div class="section-container">
+    <h2 class="section-title">Edit Education</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <div class="mb-3">
+                            <label asp-for="Degree" class="form-label"></label>
+                            <select asp-for="Degree" asp-items="ViewBag.DegreeTypes" class="form-select"></select>
+                            <span asp-validation-for="Degree" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Subject" class="form-label"></label>
+                            <select asp-for="Subject" asp-items="ViewBag.SubjectTypes" class="form-select"></select>
+                            <span asp-validation-for="Subject" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Institution" class="form-label"></label>
+                            <input asp-for="Institution" class="form-control" />
+                            <span asp-validation-for="Institution" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="GraduationYear" class="form-label"></label>
+                            <input asp-for="GraduationYear" class="form-control" type="number" min="1950" max="2050" />
+                            <span asp-validation-for="GraduationYear" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="UserInfoId" class="form-label">User</label>
+                            <select asp-for="UserInfoId" class="form-select" asp-items="ViewBag.UserInfoId"></select>
+                            <span asp-validation-for="UserInfoId" class="text-danger"></span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Save
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Tips</h5>
+                </div>
+                <div class="card-body">
+                    <p>Update your educational information to keep your resume current.</p>
+                    <p>For ongoing education, you can leave the graduation year blank.</p>
+                    <p>Select the appropriate degree and subject that best reflects your qualification.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

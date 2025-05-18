@@ -28,12 +28,15 @@
                         <div class="card-body">
                             <h5 class="card-title">@item.SkillName</h5>
                             <div class="mt-2">
-                                <span class="badge bg-primary rounded-pill">Expert</span>
+                                <span class="badge bg-primary rounded-pill">@item.SkillType</span>
                             </div>
                         </div>
                         <div class="card-footer bg-transparent d-flex justify-content-between">
                             <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-pencil"></i> Edit
+                            </a>
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">
+                                <i class="bi bi-eye"></i> Details
                             </a>
                             <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">
                                 <i class="bi bi-trash"></i> Delete

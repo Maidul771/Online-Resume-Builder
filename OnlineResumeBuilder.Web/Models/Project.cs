@@ -29,6 +29,7 @@ namespace OnlineResumeBuilder.Web.Models
     [Flags]
     public enum TechnologyType
     {
+        None = 0,
         [Display(Name = ".NET Core")]
         DotNetCore = 1,
         [Display(Name = "Entity Framework")]

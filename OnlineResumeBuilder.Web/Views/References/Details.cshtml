@@ -32,6 +32,11 @@
                     <div class="col-md-9">@Model.Relationship</div>
                 </div>
             }
+            
+            <div class="row mb-2">
+                <div class="col-md-3 fw-bold">User:</div>
+                <div class="col-md-9">@Html.DisplayFor(model => model.UserInfo.FullName)</div>
+            </div>
         </div>
     </div>
     

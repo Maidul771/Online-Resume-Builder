@@ -56,8 +56,20 @@ namespace OnlineResumeBuilder.Web.Controllers
         // POST: Projects/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProjectName,TechnologyUsed,Description,UserInfoId")] Project project)
+        public async Task<IActionResult> Create([Bind("Id,ProjectName,TechnologyUsed,Description,UserInfoId")] Project project, int[] selectedTechnologies = null)
         {
+            // If selectedTechnologies were passed directly, use them to set TechnologyUsed
+            if (selectedTechnologies != null && selectedTechnologies.Length > 0)
+            {
+                project.TechnologyUsed = 0; // Reset the value
+                foreach (var tech in selectedTechnologies)
+                {
+                    project.TechnologyUsed |= (TechnologyType)tech;
+                }
+                // Ensure ModelState is valid for TechnologyUsed
+                ModelState.Remove("TechnologyUsed");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(project);
@@ -90,11 +102,23 @@ namespace OnlineResumeBuilder.Web.Controllers
         // POST: Projects/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProjectName,TechnologyUsed,Description,UserInfoId")] Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProjectName,TechnologyUsed,Description,UserInfoId")] Project project, int[] selectedTechnologies = null)
         {
             if (id != project.Id)
             {
                 return NotFound();
+            }
+
+            // If selectedTechnologies were passed directly, use them to set TechnologyUsed
+            if (selectedTechnologies != null && selectedTechnologies.Length > 0)
+            {
+                project.TechnologyUsed = 0; // Reset the value
+                foreach (var tech in selectedTechnologies)
+                {
+                    project.TechnologyUsed |= (TechnologyType)tech;
+                }
+                // Ensure ModelState is valid for TechnologyUsed
+                ModelState.Remove("TechnologyUsed");
             }
 
             if (ModelState.IsValid)

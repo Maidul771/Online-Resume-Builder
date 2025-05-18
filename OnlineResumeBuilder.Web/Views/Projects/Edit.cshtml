@@ -1,0 +1,104 @@
+@model OnlineResumeBuilder.Web.Models.Project
+
+@{
+    ViewData["Title"] = "Edit Project";
+}
+
+<div class="section-container">
+    <h2 class="section-title">Edit Project</h2>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="TechnologyUsed" id="TechnologyUsed" />
+                        <div class="mb-3">
+                            <label asp-for="ProjectName" class="form-label"></label>
+                            <input asp-for="ProjectName" class="form-control" />
+                            <span asp-validation-for="ProjectName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label"></label>
+                            <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="TechnologyUsed" class="form-label">Technologies Used</label>
+                            <div class="row mt-2">
+                                @foreach (var item in ViewBag.TechnologyTypes)
+                                {
+                                    <div class="col-md-6 mb-2">
+                                        <div class="form-check">
+                                            <input type="checkbox" id="tech_@item.Id" name="selectedTechnologies" value="@item.Id" class="form-check-input" @(item.IsChecked ? "checked" : "") />
+                                            <label for="tech_@item.Id" class="form-check-label">@item.Text</label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <span asp-validation-for="TechnologyUsed" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="UserInfoId" class="form-label">User</label>
+                            <select asp-for="UserInfoId" class="form-select" asp-items="ViewBag.UserInfoId"></select>
+                            <span asp-validation-for="UserInfoId" class="text-danger"></span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Save
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Back to List
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Tips</h5>
+                </div>
+                <div class="card-body">
+                    <p>Update your project information to keep your resume current and relevant.</p>
+                    <p>Make sure to select all technologies that were used in this project.</p>
+                    <p>Keep the description concise but informative about your role and achievements.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function () {
+            $('form').submit(function (e) {
+                try {
+                    let selectedTechs = 0;
+                    $('input[name="selectedTechnologies"]:checked').each(function () {
+                        let techValue = parseInt($(this).val());
+                        selectedTechs = selectedTechs | techValue;
+                    });
+                    
+                    // Ensure at least one technology is selected
+                    if (selectedTechs === 0 && $('input[name="selectedTechnologies"]').length > 0) {
+                        alert('Please select at least one technology');
+                        e.preventDefault();
+                        return false;
+                    }
+                    
+                    $('#TechnologyUsed').val(selectedTechs);
+                } catch (error) {
+                    console.error('Error in form submission:', error);
+                    e.preventDefault();
+                    return false;
+                }
+                return true;
+            });
+        });
+    </script>
+} 

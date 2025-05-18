@@ -123,7 +123,8 @@ namespace OnlineResumeBuilder.Web.Controllers
                 {
                     page.Margin(30);
                     
-                    page.Header().Element(header =>
+                    // Only show header on the first page
+                    page.Header().ShowOnce().Element(header =>
                     {
                         header.Row(row =>
                         {
@@ -167,23 +168,20 @@ namespace OnlineResumeBuilder.Web.Controllers
                         });
                     });
 
-                    page.Content().Element(content =>
+                    page.Content().Column(mainContent =>
                     {
                         // Objective Section
                         if (userInfo.Objectives != null && userInfo.Objectives.Any())
                         {
-                            content.Container().Column(column =>
+                            mainContent.Item().Column(column =>
                             {
                                 column.Item().BorderBottom(1).PaddingBottom(5).Text("OBJECTIVE").Bold().FontSize(14);
                                 column.Spacing(5);
                                 
-                                column.Item().Column(innerColumn =>
+                                foreach (var objective in userInfo.Objectives)
                                 {
-                                    foreach (var objective in userInfo.Objectives)
-                                    {
-                                        innerColumn.Item().Text(objective.Details);
-                                    }
-                                });
+                                    column.Item().Text(objective.Details);
+                                }
                                 
                                 column.Spacing(10);
                             });
@@ -192,7 +190,7 @@ namespace OnlineResumeBuilder.Web.Controllers
                         // Skills Section
                         if (userInfo.Skills != null && userInfo.Skills.Any())
                         {
-                            content.Container().Column(column =>
+                            mainContent.Item().Column(column =>
                             {
                                 column.Item().BorderBottom(1).PaddingBottom(5).Text("SKILLS").Bold().FontSize(14);
                                 column.Spacing(5);
@@ -206,28 +204,27 @@ namespace OnlineResumeBuilder.Web.Controllers
                         // Experience Section
                         if (userInfo.Experiences != null && userInfo.Experiences.Any())
                         {
-                            content.Container().Column(column =>
+                            mainContent.Item().Column(column =>
                             {
                                 column.Item().BorderBottom(1).PaddingBottom(5).Text("PROFESSIONAL EXPERIENCE").Bold().FontSize(14);
                                 column.Spacing(5);
                                 
-                                column.Item().Column(innerColumn =>
+                                foreach (var experience in userInfo.Experiences.OrderByDescending(e => e.StartDate))
                                 {
-                                    foreach (var experience in userInfo.Experiences.OrderByDescending(e => e.StartDate))
+                                    column.Item().Column(expColumn =>
                                     {
-                                        innerColumn.Item().Column(expColumn =>
+                                        expColumn.Spacing(5);
+                                        expColumn.Item().Text(text =>
                                         {
-                                            expColumn.Spacing(5);
-                                            expColumn.Item().Text(text =>
-                                            {
-                                                text.Span($"{experience.CompanyName} - {experience.Position}").Bold();
-                                                text.Span($" ({experience.StartDate:MMM yyyy} - {(experience.EndDate.HasValue ? experience.EndDate.Value.ToString("MMM yyyy") : "Present")})");
-                                            });
-
-                                            expColumn.Item().Text(experience.Details);
+                                            text.Span($"{experience.CompanyName} - {experience.Position}").Bold();
+                                            text.Span($" ({experience.StartDate:MMM yyyy} - {(experience.EndDate.HasValue ? experience.EndDate.Value.ToString("MMM yyyy") : "Present")})");
                                         });
-                                    }
-                                });
+
+                                        expColumn.Item().Text(experience.Details);
+                                    });
+                                    
+                                    column.Spacing(5);
+                                }
                                 
                                 column.Spacing(10);
                             });
@@ -236,29 +233,32 @@ namespace OnlineResumeBuilder.Web.Controllers
                         // Projects Section
                         if (userInfo.Projects != null && userInfo.Projects.Any())
                         {
-                            content.Container().Column(column =>
+                            mainContent.Item().Column(column =>
                             {
                                 column.Item().BorderBottom(1).PaddingBottom(5).Text("PROJECTS").Bold().FontSize(14);
                                 column.Spacing(5);
                                 
-                                column.Item().Column(innerColumn =>
+                                foreach (var project in userInfo.Projects)
                                 {
-                                    foreach (var project in userInfo.Projects)
+                                    column.Item().Column(projColumn =>
                                     {
-                                        innerColumn.Item().Column(projColumn =>
+                                        projColumn.Spacing(5);
+                                        projColumn.Item().Text(project.ProjectName).Bold();
+                                        projColumn.Item().Text(project.Description);
+                                        
+                                        var techFlags = Enum.GetValues(typeof(TechnologyType))
+                                            .Cast<TechnologyType>()
+                                            .Where(t => project.TechnologyUsed.HasFlag(t) && t != TechnologyType.None)
+                                            .Select(t => GetDisplayName(t));
+                                        
+                                        if (techFlags.Any())
                                         {
-                                            projColumn.Spacing(5);
-                                            projColumn.Item().Text(project.ProjectName).Bold();
-                                            projColumn.Item().Text(project.Description);
-                                            
-                                            var techFlags = Enum.GetValues(typeof(TechnologyType))
-                                                .Cast<TechnologyType>()
-                                                .Where(t => project.TechnologyUsed.HasFlag(t))
-                                                .Select(t => t.ToString());
                                             projColumn.Item().Text($"Technologies: {string.Join(", ", techFlags)}");
-                                        });
-                                    }
-                                });
+                                        }
+                                    });
+                                    
+                                    column.Spacing(5);
+                                }
                                 
                                 column.Spacing(10);
                             });
@@ -267,29 +267,28 @@ namespace OnlineResumeBuilder.Web.Controllers
                         // Education Section
                         if (userInfo.Educations != null && userInfo.Educations.Any())
                         {
-                            content.Container().Column(column =>
+                            mainContent.Item().Column(column =>
                             {
                                 column.Item().BorderBottom(1).PaddingBottom(5).Text("EDUCATION").Bold().FontSize(14);
                                 column.Spacing(5);
                                 
-                                column.Item().Column(innerColumn =>
+                                foreach (var education in userInfo.Educations.OrderByDescending(e => e.GraduationYear))
                                 {
-                                    foreach (var education in userInfo.Educations.OrderByDescending(e => e.GraduationYear))
+                                    column.Item().Column(eduColumn =>
                                     {
-                                        innerColumn.Item().Column(eduColumn =>
+                                        eduColumn.Spacing(5);
+                                        eduColumn.Item().Text(text =>
                                         {
-                                            eduColumn.Spacing(5);
-                                            eduColumn.Item().Text(text =>
-                                            {
-                                                text.Span($"{GetDisplayName(education.Degree)} in {GetDisplayName(education.Subject)}").Bold();
-                                                if (education.GraduationYear.HasValue)
-                                                    text.Span($" ({education.GraduationYear})");
-                                            });
-                                            
-                                            eduColumn.Item().Text(education.Institution);
+                                            text.Span($"{GetDisplayName(education.Degree)} in {GetDisplayName(education.Subject)}").Bold();
+                                            if (education.GraduationYear.HasValue)
+                                                text.Span($" ({education.GraduationYear})");
                                         });
-                                    }
-                                });
+                                        
+                                        eduColumn.Item().Text(education.Institution);
+                                    });
+                                    
+                                    column.Spacing(5);
+                                }
                                 
                                 column.Spacing(10);
                             });
@@ -298,29 +297,28 @@ namespace OnlineResumeBuilder.Web.Controllers
                         // Certifications Section
                         if (userInfo.Certifications != null && userInfo.Certifications.Any())
                         {
-                            content.Container().Column(column =>
+                            mainContent.Item().Column(column =>
                             {
                                 column.Item().BorderBottom(1).PaddingBottom(5).Text("CERTIFICATIONS").Bold().FontSize(14);
                                 column.Spacing(5);
                                 
-                                column.Item().Column(innerColumn =>
+                                foreach (var certification in userInfo.Certifications)
                                 {
-                                    foreach (var certification in userInfo.Certifications)
+                                    column.Item().Column(certColumn =>
                                     {
-                                        innerColumn.Item().Column(certColumn =>
+                                        certColumn.Spacing(5);
+                                        certColumn.Item().Text(text =>
                                         {
-                                            certColumn.Spacing(5);
-                                            certColumn.Item().Text(text =>
-                                            {
-                                                text.Span(certification.CourseName).Bold();
-                                                if (certification.CompletionYear.HasValue)
-                                                    text.Span($" ({certification.CompletionYear})");
-                                            });
-                                            
-                                            certColumn.Item().Text(certification.Institute);
+                                            text.Span(certification.CourseName).Bold();
+                                            if (certification.CompletionYear.HasValue)
+                                                text.Span($" ({certification.CompletionYear})");
                                         });
-                                    }
-                                });
+                                        
+                                        certColumn.Item().Text(certification.Institute);
+                                    });
+                                    
+                                    column.Spacing(5);
+                                }
                                 
                                 column.Spacing(10);
                             });
@@ -329,28 +327,25 @@ namespace OnlineResumeBuilder.Web.Controllers
                         // References Section
                         if (userInfo.References != null && userInfo.References.Any())
                         {
-                            content.Container().Column(column =>
+                            mainContent.Item().Column(column =>
                             {
                                 column.Item().BorderBottom(1).PaddingBottom(5).Text("REFERENCES").Bold().FontSize(14);
                                 column.Spacing(5);
                                 
-                                column.Item().Column(innerColumn =>
+                                foreach (var reference in userInfo.References)
                                 {
-                                    foreach (var reference in userInfo.References)
+                                    column.Item().Column(refColumn =>
                                     {
-                                        innerColumn.Item().Column(refColumn =>
-                                        {
-                                            refColumn.Spacing(5);
-                                            refColumn.Item().Text(reference.RefereeName).Bold();
-                                            refColumn.Item().Text(reference.Organization);
-                                            refColumn.Item().Text($"Email: {reference.Email}");
-                                            if (!string.IsNullOrEmpty(reference.Phone))
-                                                refColumn.Item().Text($"Phone: {reference.Phone}");
-                                        });
-                                    }
-                                });
-                                
-                                column.Spacing(10);
+                                        refColumn.Spacing(5);
+                                        refColumn.Item().Text(reference.RefereeName).Bold();
+                                        refColumn.Item().Text(reference.Organization);
+                                        refColumn.Item().Text($"Email: {reference.Email}");
+                                        if (!string.IsNullOrEmpty(reference.Phone))
+                                            refColumn.Item().Text($"Phone: {reference.Phone}");
+                                    });
+                                    
+                                    column.Spacing(5);
+                                }
                             });
                         }
                     });
