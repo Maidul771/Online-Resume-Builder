@@ -66,7 +66,7 @@ Startup.cs           # Configures middleware, services, routing, EF, etc.
 OnlineResumeBuilder.sln # Visual Studio solution file
 
 ## Screenshots
-![Objective](https://github.com/Maidul771/Online-Resume-Builder/blob/cfd5da912d507c9a04573a5a199aa203ccbab6a2/Add%20Objective.png)
+![Preview](https://github.com/Maidul771/Online-Resume-Builder/blob/ea714a05496d18b3956e4f25d03bf9303c3bb673/Preview.png)
 
 ![Add Objective](https://github.com/Maidul771/Online-Resume-Builder/blob/cfd5da912d507c9a04573a5a199aa203ccbab6a2/Add%20Objective.png)
 
